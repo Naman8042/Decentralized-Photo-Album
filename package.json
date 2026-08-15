@@ -11,6 +11,7 @@
   "dependencies": {
     "@pinata/sdk": "^2.1.0",
     "@tabler/icons-react": "^3.24.0",
+    "@tanstack/react-query": "^5.101.4",
     "aceternity-ui": "^0.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -24,7 +25,9 @@
     "react-dropzone": "^14.3.5",
     "react-rotating-text": "^1.4.1",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.55.16",
+    "wagmi": "^3.7.6"
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
