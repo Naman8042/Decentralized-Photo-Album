@@ -34,7 +34,7 @@ export default function Album() {
 
     // Wagmi Hooks
     const { data: hash, error: writeError, writeContractAsync } = useWriteContract();
-    const { isLoading: isConfirming, isSuccess: isConfirmed, error: receiptError } = 
+    const { isSuccess: isConfirmed, error: receiptError } = 
         useWaitForTransactionReceipt({ hash });
     
     // UI State
@@ -78,7 +78,8 @@ export default function Album() {
             
             setLoadingStep("writingToChain");
 
-        } catch (err: any) {
+        } catch (error) {
+            const err = error as Error;
             console.error(err);
             const shortMessage = err.message ? err.message.split('(')[0] : "An unknown error occurred.";
             setErrorMessage(shortMessage || "An unknown error occurred.");

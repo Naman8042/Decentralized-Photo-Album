@@ -40,14 +40,18 @@ export async function POST(request: Request) {
     const fileName = uploadedFile.name || "uploaded_asset";
 
     // Convert buffer to readable stream
-    const readableStream = Readable.from(fileBuffer);
-    (readableStream as any).path = fileName;
+    const readableStream = Readable.from(fileBuffer) as Readable & { path: string };
+    readableStream.path = fileName; 
 
     // Upload file to Pinata
     const fileUploadResponse = await pinata.pinFileToIPFS(readableStream, {
-      pinataMetadata: { name: fileName },
-      wrapWithDirectory: false,
-    } as any);
+      pinataMetadata: { 
+        name: fileName 
+      },
+      pinataOptions: {
+        wrapWithDirectory: false // Moved inside pinataOptions
+      }
+    });
 
     const imageUri = `ipfs://${fileUploadResponse.IpfsHash}`;
 
@@ -75,9 +79,10 @@ export async function POST(request: Request) {
         },
       }
     );
-  } catch (error: any) {
+  } catch (err) {
+    const error = err as Error
     console.error("Upload failed:", error);
-    const errorDetails = error?.details || error?.message || "Unknown error";
+    const errorDetails = error?.message || "Unknown error";
 
     return NextResponse.json(
       { error: "Upload failed: Internal Server Error.", details: errorDetails },

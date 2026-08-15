@@ -17,7 +17,7 @@ import {
     useReadContracts
 } from 'wagmi';
 import {CONTRACT_ADDRESS,CONTRACT_ABI} from '@/lib/contract'
-
+import Image from 'next/image';
 
 interface AlbumData {
     id: number;
@@ -84,7 +84,7 @@ function AlbumCoverImage({ metadataCid, alt }: { metadataCid: string, alt: strin
 
     if (hasError) {
         return (
-            <img
+            <Image
                 src="https://placehold.co/400x400/eee/aaa?text=Error"
                 alt={alt}
                 className="h-full w-full object-cover"
@@ -93,7 +93,7 @@ function AlbumCoverImage({ metadataCid, alt }: { metadataCid: string, alt: strin
     }
 
     return (
-        <img
+        <Image
             src={imageUrl}
             alt={alt}
             className="h-full w-full object-cover"
@@ -126,7 +126,7 @@ export default function DashboardPage() {
     // 2. Prepare the batch-call
     const albumContracts = useMemo(() => {
         // Guard against address being undefined
-        if (!albumIds || (albumIds as any[]).length === 0 || !address) return [];
+        if (!albumIds || (albumIds as string[]).length === 0 || !address) return [];
         
         return (albumIds as bigint[]).map(id => ({
             address: CONTRACT_ADDRESS as `0x${string}`,
@@ -153,13 +153,21 @@ export default function DashboardPage() {
     const error = errorIds || errorAlbums;
 
     // 5. Format the successfully fetched album data
+    interface albumDataInterface{
+        id:string,
+        title:string,
+        coverImageCid:string,
+        photoCids:string[],
+        isPublic:boolean,
+        owner:string
+    }
     const albums = useMemo((): AlbumData[] => {
         if (!albumsDataRaw) return [];
         
         return albumsDataRaw
             .filter(item => item.status === 'success' && item.result)
             .map(item => {
-                const album = item.result as any;
+                const album = item.result as albumDataInterface;
                 return {
                     id: Number(album.id),
                     title: album.title,

@@ -8,7 +8,6 @@ import {
     IconPhoto, 
     IconLock, 
     IconEye, 
-    IconWallet,
     IconArrowLeft,
     IconX,
     IconDownload,
@@ -19,7 +18,7 @@ import {
 } from 'wagmi';
 import {CONTRACT_ADDRESS,CONTRACT_ABI} from '@/lib/contract'
 import { useParams } from 'next/navigation';
-
+import Image from 'next/image';
 // --- 1. DEFINITIONS MOVED TO TOP LEVEL ---
 
 // Define the structure of the album data
@@ -93,7 +92,7 @@ function AlbumCoverImage({
 
     if (hasError) {
         return (
-            <img
+            <Image
                 src="https://placehold.co/400x400/eee/aaa?text=Error"
                 alt={alt}
                 className="h-full w-full object-cover"
@@ -104,7 +103,7 @@ function AlbumCoverImage({
     const isClickable = !hasError && imageUrl.startsWith('https://ipfs.io') && onImageClick;
 
     return (
-        <img
+        <Image
             src={imageUrl}
             alt={alt}
             className={`h-full w-full object-cover ${isClickable ? 'cursor-pointer' : ''}`}
@@ -159,7 +158,7 @@ function PhotoModal({ imageUrl, onClose }: { imageUrl: string, onClose: () => vo
                 className="relative max-w-full max-h-full flex flex-col gap-4"
                 onClick={(e) => e.stopPropagation()}
             >
-                <img
+                <Image
                     src={imageUrl}
                     alt="Enlarged view"
                     className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
@@ -213,10 +212,17 @@ export default function ViewAlbumPage() {
             enabled: !!id,
         }
     });
-
+    interface albumDataInterface{
+        id:string,
+        title:string,
+        coverImageCid:string,
+        photoCids:string[],
+        isPublic:boolean,
+        owner:string
+    }
     const album = useMemo((): AlbumData | null => {
         if (!albumData) return null;
-        const result = albumData as any;
+        const result = albumData as albumDataInterface;
         return {
             id: Number(result.id),
             title: result.title,

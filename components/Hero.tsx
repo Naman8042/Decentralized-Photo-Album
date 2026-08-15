@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Shield, Lock, Globe } from "lucide-react";
 import heroNetwork from "@/assets/hero-network.jpg";
-
+import Image from "next/image";
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background">
-        <img 
+        <Image 
           src={heroNetwork} 
           alt="Decentralized network visualization" 
           className="w-full h-full object-cover opacity-20"
