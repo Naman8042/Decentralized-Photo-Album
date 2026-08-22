@@ -1,5 +1,4 @@
 "use client";
-
 import { useMemo, useState, useEffect } from 'react'; // <-- Added useState, useEffect
 import Link from 'next/link';
 import { 
@@ -28,12 +27,11 @@ interface AlbumData {
 }
 
 // Helper function to convert IPFS CID to a public gateway URL
-function ipfsToGatewayUrl(ipfsCid: string): string {
-    if (!ipfsCid || !ipfsCid.startsWith('ipfs://')) {
-        return ""; // Return empty string for invalid CIDs
-    }
-    // Use a reliable public gateway
-    return `https://ipfs.io/ipfs/${ipfsCid.substring(7)}`;
+function ipfsToGatewayUrl(ipfsCid: string) {
+  if (!ipfsCid?.startsWith("ipfs://")) return "";
+
+  const cid = ipfsCid.replace("ipfs://", "");
+  return `https://gateway.pinata.cloud/ipfs/${cid}`;
 }
 
 // --- NEW COMPONENT ---
@@ -84,11 +82,7 @@ function AlbumCoverImage({ metadataCid, alt }: { metadataCid: string, alt: strin
 
     if (hasError) {
         return (
-            <Image
-                src="https://placehold.co/400x400/eee/aaa?text=Error"
-                alt={alt}
-                className="h-full w-full object-cover"
-            />
+            <div>Error Occured</div>
         );
     }
 
@@ -96,9 +90,11 @@ function AlbumCoverImage({ metadataCid, alt }: { metadataCid: string, alt: strin
         <Image
             src={imageUrl}
             alt={alt}
+            width={500}
+            height={500}
             className="h-full w-full object-cover"
             // This onError is a fallback for the *final* image
-            onError={(e) => (e.currentTarget.src = "https://placehold.co/400x400/eee/aaa?text=Error")}
+            // onError={(e) => (e.currentTarget.src = "https://placehold.co/400x400/eee/aaa?text=Error")}
         />
     );
 }
@@ -179,6 +175,11 @@ export default function DashboardPage() {
     }, [albumsDataRaw]);
 
     console.log(albums) // This will still show the metadata CID, which is correct
+        const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+    setMounted(true);
+    }, []);
 
     const renderContent = () => {
         // State 1: User is not connected
@@ -193,7 +194,7 @@ export default function DashboardPage() {
         }
 
         // State 2: Loading data
-        if (isLoading) {
+        if (isLoading && !mounted) {
             return (
                 <div className="flex flex-col items-center justify-center text-center p-10">
                     <IconLoader2 className="h-10 w-10 animate-spin text-blue-600" />

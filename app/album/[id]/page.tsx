@@ -32,12 +32,11 @@ interface AlbumData {
 }
 
 // Helper function to convert IPFS CID to a public gateway URL
-function ipfsToGatewayUrl(ipfsCid: string): string {
-    if (!ipfsCid || !ipfsCid.startsWith('ipfs://')) {
-        return ""; // Return empty string for invalid CIDs
-    }
-    // Use a reliable public gateway
-    return `https://ipfs.io/ipfs/${ipfsCid.substring(7)}`;
+function ipfsToGatewayUrl(ipfsCid: string) {
+  if (!ipfsCid?.startsWith("ipfs://")) return "";
+
+  const cid = ipfsCid.replace("ipfs://", "");
+  return `https://gateway.pinata.cloud/ipfs/${cid}`;
 }
 
 // --- REUSABLE IMAGE COMPONENT ---
@@ -96,6 +95,8 @@ function AlbumCoverImage({
                 src="https://placehold.co/400x400/eee/aaa?text=Error"
                 alt={alt}
                 className="h-full w-full object-cover"
+                width={400}
+                height={400}
             />
         );
     }
@@ -105,6 +106,8 @@ function AlbumCoverImage({
     return (
         <Image
             src={imageUrl}
+            width={400}
+            height={400}
             alt={alt}
             className={`h-full w-full object-cover ${isClickable ? 'cursor-pointer' : ''}`}
             onError={(e) => (e.currentTarget.src = "https://placehold.co/400x400/eee/aaa?text=Error")}
@@ -159,6 +162,8 @@ function PhotoModal({ imageUrl, onClose }: { imageUrl: string, onClose: () => vo
                 onClick={(e) => e.stopPropagation()}
             >
                 <Image
+                    width={400}
+                    height={400}
                     src={imageUrl}
                     alt="Enlarged view"
                     className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
