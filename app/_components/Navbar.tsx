@@ -102,7 +102,7 @@ export default function Navbar() {
             {mounted && isConnected && (
               <NavLink href="/dashboard">Dashboard</NavLink>
             )}
-            <NavLink href="/album">Create Album</NavLink>
+            <NavLink href="/addalbum">Create Album</NavLink>
           </div>
 
           {/* Right: Wallet Actions & Mobile Toggle */}
@@ -160,7 +160,7 @@ export default function Navbar() {
                 Dashboard
               </NavLink>
             )}
-            <NavLink href="/album" mobile>
+            <NavLink href="/addalbum" mobile>
               Create Album
             </NavLink>
 
